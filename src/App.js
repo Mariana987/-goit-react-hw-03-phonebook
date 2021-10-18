@@ -47,7 +47,7 @@ class App extends Component {
     const visibleContacts = contacts.filter(contact =>
       contact.name.toLowerCase().includes(normalizedFilter),
     );
-    console.log(visibleContacts)
+
     return visibleContacts;
   };
 
@@ -56,6 +56,23 @@ class App extends Component {
       contacts: prevState.contacts.filter(contact => contact.id !== id),
     }));
   };
+
+  componentDidMount() {
+    const localContact = localStorage.getItem('contacts');
+
+    const parsedContacts = JSON.parse(localContact)
+
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts })
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts))
+    }
+  }
+
 
   render() {
     const { filter, contacts } = this.state;
